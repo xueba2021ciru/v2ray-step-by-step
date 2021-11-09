@@ -59,6 +59,50 @@ V2Ray 提供了代理转发功能，利用它可以实现中转（在没有中�
 }
 ```
 
+## 不兼容客户端的代理转发
+
+如果您的最终节点为 V2Ray 不支持的协议，可以用任意门进行转发:
+
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "vmess",
+      "settings": { // settings 的根据实际情况修改
+        "vnext": [
+          {
+            "address": "1.1.1.1",
+            "port": 8888,
+            "users": [
+              {
+                "alterId": 64,
+                "id": "b12614c5-5ca4-4eba-a215-c61d642116ce"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "inbounds":[
+    {
+      "port": 1080,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "address": "8.8.8.8", //目标节点IP
+        "port": 51820, //目标节点端口
+        "network": "tcp,udp"
+      }
+    }
+  ]
+}
+```
+现在您可以通过连接本地 1080 端口通过 VMESS 连接远程节点的 51820 号端口了.
+
+**注意：如果您需要用该方法代理VPN，并且V2Ray和VPN在同一台机器内。您需要单独设置目标IP的路由:**
+* `Linux`: 命令为 ip route add 目标ip via 网关
+
+
 ## 链式代理转发
 
 如果你有多个 Shadowsocks 或 VMess 账户，那么你可以这样:
